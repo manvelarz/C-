@@ -41,9 +41,11 @@ namespace websocket
 
             using (StreamWriter outputFile = new StreamWriter(mydocpath, true))
             {
-                outputFile.Write("\r\n" + input.timestamp + "," + msg[0][msg[0].Count - 1].Item1 + "," + msg[1][0].Item1 + ",");
 
-                output += "\r\n" + input.timestamp + "," + msg[0][msg[0].Count - 1].Item1 + "," + msg[1][0].Item1 + ",";
+
+                outputFile.Write("\r\n" + input.timestamp + "," + input.asks.Last()[0] + "," + input.bids[0][0] + ",");
+
+                output += "\r\n" + input.timestamp + "," + input.asks.Last()[0] + "," + input.bids[0][0] + ",";
 
                 for (int m = 0; m < msg.Count; m++)
                 {
@@ -84,15 +86,6 @@ namespace websocket
 
             storeToupleToFile(level1sum, input);
         }
-
-
-
     }
-
-
-
-
-
-
 }
 

@@ -19,15 +19,15 @@ namespace websocket
 
 
             wb.send("[{'event':'addChannel','channel':'ok_btccny_depth60'},{'event':'addChannel','channel':'ok_btccny_trades'}]");
-            //wb.send("{'event':'addChannel','channel':'ok_btccny_depth60'}");
-           
+            //wb.send("{'event':'addChannel','channel':'ok_btcusd_kline_1min'}");
+
             //发生断开重连时，需要重新订阅
             //while (true) { 
             //    if(wb.isReconnect()){
             //        wb.send("{'event':'addChannel','channel':'ok_btccny_ticker'}");
             //    }
             //    Thread.Sleep(1000);
-            
+
             //}
             Console.ReadKey();
             wb.stop();  //优雅的关闭，程序退出时需要关闭WebSocket连接
