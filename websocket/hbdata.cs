@@ -34,15 +34,6 @@ namespace websocket
 
     {
 
-        public static List<string> CustomSplit(string line, char CharToSplit)
-        {
-
-            char[] pakagic = { CharToSplit };
-
-            List<string> LineList = line.Split(pakagic, 2, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-            return LineList;
-        }
 
         public static void storeListToFile(List<List<double>> msg)
 

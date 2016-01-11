@@ -57,18 +57,23 @@ namespace websocket
 
                     JArray jo = JArray.Parse(e.Data);
 
-                    foreach (JObject item in jo)
+                    foreach (JObject item in jo) // channels
                     {
                             string channel = item["channel"].ToString();
-
-                            Console.WriteLine($" {channel}");
 
                             if (channel == "ok_btccny_trades")
                             {
 
                                 var model = item.ToObject<Trades>();
 
-                                Console.WriteLine("trades");
+                                TradesTyped typed = Trades.typesFromString(model);
+
+                                var total = typed.data.Sum(x => x.amount);
+
+                                var TradeSumedAmount = TradesTyped.SumAmountByType(typed.data);
+
+                                TradesTyped.StoreTrades(TradeSumedAmount);
+
 
                             }
 
@@ -82,6 +87,7 @@ namespace websocket
 
                     }
             }
+           // Console.WriteLine("...Pong");
         }
 
         private void webSocketClient_Closed(object sender, WebSocketSharp.CloseEventArgs e)

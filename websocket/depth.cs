@@ -75,6 +75,7 @@ namespace websocket
             Console.WriteLine(output);
         }
 
+       
         public static void TransformAndWright(depthData input)
         {
 
