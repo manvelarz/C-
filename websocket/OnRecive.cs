@@ -7,45 +7,85 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 namespace websocket
 {
+    public static class Globals
+    {
+        public static List<TradeItem> PastTradesTyped = new List<TradeItem>(); // Modifiable in Code
+        public const Int32 VALUE = 10; // Unmodifiable
+    }
+
+
     class OnRecive
     {
+        public static bool isLastWastrade = false;
+        public static bool after = false;
+        public static short counter = 0;
+
         public static void whatToDo(string msg)
         {
             if (msg != "{\"event\":\"pong\"}")
             {
+                 
 
                 JArray jo = JArray.Parse(msg);
 
-                foreach (JObject item in jo) // channels
+                if (jo.First.Last.Path != "[0].success") // to avoid the first response data conflict
                 {
-                    string channel = item["channel"].ToString();
 
-                    if (channel == "ok_btccny_trades")
+                    foreach (JObject item in jo) // channels
                     {
+                        string channel = item["channel"].ToString();
 
-                        var model = item.ToObject<Trades>();
+                        //Console.WriteLine(counter.ToString());
 
-                        TradesTyped typed = Trades.typesFromString(model);
+                        //counter += 1;
 
-                        var total = typed.data.Sum(x => x.amount);
+                        if (channel == "ok_sub_spotcny_btc_trades"  )
+                        {
+                            Console.WriteLine(counter.ToString());
 
-                        var TradeSumedAmount = TradesTyped.SumAmountByType(typed.data);
+                            counter += 1;
 
-                        TradesTyped.StoreTrades(TradeSumedAmount , typed);
+                            var model = item.ToObject<Trades>();
 
+                            TradesTyped typed = Trades.typesFromString(model);
+
+                            var TradeSumedAmount = TradesTyped.SumAmountByType(typed.data);
+
+                            //TradesTyped.StoreTrades(TradeSumedAmount, typed);
+
+                            Globals.PastTradesTyped.AddRange(typed.data);
+
+                            if (!isLastWastrade)
+
+                            {
+                                
+                                TradeSumedAmount = TradesTyped.SumAmountByType(Globals.PastTradesTyped);
+
+                                TradesTyped.StoreTrades(TradeSumedAmount, typed);
+
+                                Globals.PastTradesTyped.RemoveRange(0, Globals.PastTradesTyped.Count);
+
+                            }
+
+                            isLastWastrade = true;
+
+                        }
+
+                        else if (channel == "ok_sub_spotcny_btc_depth_60")
+                        {
+                            isLastWastrade = false;
+
+                            var model = item.ToObject<depthRoot>();
+
+                            depthData.TransformAndStore(model.data);
+                            
+                            //Console.WriteLine(msg); 
+                        }
 
                     }
-
-                    else if (channel == "ok_btccny_depth60")
-                    {
-                        var model = item.ToObject<depthRoot>();
-
-                        depthData.TransformAndWright(model.data);
-
-                    }
-
-                }
+                } // if         "success"
             }
+          // Console.WriteLine("pong");
 
         }
     }

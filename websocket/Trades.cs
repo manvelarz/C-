@@ -11,8 +11,13 @@ namespace websocket
     public class Trades 
     {
         public Trades() { }
+
         public string channel { get; set; }
+
         public List<List<string>> data { get; set; }
+
+
+
 
         public static TradesTyped typesFromString(Trades input)
 
@@ -21,10 +26,11 @@ namespace websocket
 
             foreach (List<string> item in input.data)
                 {
-                     TradeItem tr = new TradeItem() {   price = Math.Round(Convert.ToSingle(item[0]),2),
-                                                        amount = Math.Round(Convert.ToSingle(item[1]),4),
-                                                        data = item[2],
-                                                        type = item[3] };
+                TradeItem tr = new TradeItem() {        Unixtime = Convert.ToSingle(item[0]),
+                                                        price = Math.Round(float.Parse(item[1], System.Globalization.CultureInfo.InvariantCulture),2),
+                                                        amount = Math.Round(float.Parse(item[2], System.Globalization.CultureInfo.InvariantCulture), 4),
+                                                        data = item[3],
+                                                        type = item[4] };
                      listofTrades.data.Add(tr);
                 }
 
@@ -34,7 +40,7 @@ namespace websocket
         }
     }
 
-    public class TradesTyped
+    public class TradesTyped : List<TradesTyped>, IEnumerable<TradesTyped>
     {
         public string channel { get; set; }
         public List<TradeItem> data { get; set; }
@@ -45,6 +51,17 @@ namespace websocket
             data = new List<TradeItem>();
         }
 
+        //public  List<TradeItem> Add(List<TradeItem> value1)
+        //{
+
+        //    this.AddRange(value1);
+
+        //    return (value1);
+
+        //}
+
+
+
         public static List<Tuple<string, float>> SumAmountByType(List<TradeItem> data)
         {
             var ret = new List<Tuple<string, float>>();
@@ -52,7 +69,7 @@ namespace websocket
             var result = data.GroupBy(i => 1)
                             .Select(i => new
                                             {
-                                                askSum = i.Where(j => j.type == "ask").Sum(k => (float)k.amount),
+                                                askSum = i.Where(j => j.type == "ask").Sum(k => (float)k.amount), 
                                                 bidSum = i.Where(j => j.type == "bid").Sum(k => (float)k.amount)
                                             });
 
@@ -66,9 +83,10 @@ namespace websocket
 
         }
 
-        public static void StoreTrades  (List<Tuple<string, float>> msg)
+        public static void StoreTrades  (List<Tuple<string, float>> msg, TradesTyped typed)
         {
             string output = "";
+            string tab = "\t";
 
             string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\WriteLines.txt";  //TODO pti mi tegic karda
 
@@ -76,8 +94,8 @@ namespace websocket
             {
 
 
-                outputFile.Write ( msg[0].Item1  + "," + msg[0].Item2 + ","+ msg[1].Item1 + "," + msg[1].Item2); 
-                //output += Math.Round(msg[m][i].Item2, 0).ToString() + ","; 
+                outputFile.Write ((Convert.ToDateTime(typed.data.First().data) ) +  tab + msg[0].Item2 + tab + + msg[1].Item2);  //msg[0].Item1  + tab + msg[0].Item2 + tab + msg[1].Item1 + tab + msg[1].Item2);
+                output += tab + msg[0].Item2 + tab + +msg[1].Item2; 
 
             }
 
@@ -86,12 +104,13 @@ namespace websocket
 
     }
 
-    public class TradeItem
+        public class TradeItem
     {
-        public TradeItem(string price, string amount, string data, string type)
+        public TradeItem(string Unixtime, string price, string amount, string data, string type)
         {
-            this.price = Convert.ToSingle(price);
-            this.amount = Convert.ToSingle(amount);
+            this.Unixtime = Convert.ToDouble(Unixtime);
+            this.price = Convert.ToDouble(price);
+            this.amount = Convert.ToDouble(amount);
             this.data = data;
             this.type = type;
 
@@ -99,6 +118,7 @@ namespace websocket
 
         public TradeItem() { } 
 
+        public double Unixtime { get; set; }
         public double price { get; set; }
         public double amount { get; set; }
         public string data { get; set; }

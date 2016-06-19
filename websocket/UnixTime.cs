@@ -14,7 +14,18 @@ namespace websocket
 
         public static UInt32 Now { get { return GetFromDateTime(DateTime.UtcNow); } }
         public static UInt32 GetFromDateTime(DateTime d) { return (UInt32)(d - unixEpoch).TotalSeconds; }
-        public static DateTime ConvertToDateTime(UInt32 unixtime) { return unixEpoch.AddSeconds(unixtime); }
+        public static DateTime ConvertToDateTime(double unixtime) { return unixEpoch.AddSeconds(unixtime); }
+        public static DateTime UnixTimestampToDateTime(long unixTime)
+        {
+            DateTime unixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            long unixTimeStampInTicks = (long)(unixTime * TimeSpan.TicksPerSecond);
+            var dt = new DateTime(unixStart.Ticks + unixTimeStampInTicks);
+            var dtt = new DateTime(unixTime, DateTimeKind.Utc);
+            return dt;
+        }
+
+
+
     }
 }
 

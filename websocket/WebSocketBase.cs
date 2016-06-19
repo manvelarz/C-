@@ -51,43 +51,17 @@ namespace websocket
         {
            
             webService.onReceive(e.Data);
-
-            if (e.Data != "{\"event\":\"pong\"}")
-            {
-
-                    JArray jo = JArray.Parse(e.Data);
-
-                    foreach (JObject item in jo) // channels
-                    {
-                            string channel = item["channel"].ToString();
-
-                            if (channel == "ok_btccny_trades")
-                            {
-
-                                var model = item.ToObject<Trades>();
-
-                                TradesTyped typed = Trades.typesFromString(model);
-
-                                var total = typed.data.Sum(x => x.amount);
-
-                                var TradeSumedAmount = TradesTyped.SumAmountByType(typed.data);
-
-                                TradesTyped.StoreTrades(TradeSumedAmount);
+            OnRecive.whatToDo(e.Data);
 
 
-                            }
+            // Console.WriteLine("...Pong");
 
-                            else if (channel == "ok_btccny_depth60")
-                            {
-                                var model = item.ToObject<depthRoot>();
 
-                                depthData.TransformAndWright(model.data);
 
-                            }
 
-                    }
-            }
-           // Console.WriteLine("...Pong");
+
+
+
         }
 
         private void webSocketClient_Closed(object sender, WebSocketSharp.CloseEventArgs e)

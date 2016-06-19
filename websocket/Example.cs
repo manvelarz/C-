@@ -17,11 +17,11 @@ namespace websocket
             WebSocketBase wb = new WebSocketBase(url, wss);
             wb.start();
 
-
-            wb.send("[{'event':'addChannel','channel':'ok_btccny_depth60'},{'event':'addChannel','channel':'ok_btccny_trades'}]");
+            // wb.send("{'event':'addChannel','channel':'ok_sub_spotcny_btc_depth_60'}");
+             wb.send("[{'event':'addChannel','channel':'ok_sub_spotcny_btc_depth_60'},{'event':'addChannel','channel':'ok_sub_spotcny_btc_trades'}]");
             //wb.send("{'event':'addChannel','channel':'ok_btcusd_kline_1min'}");
 
-            //发生断开重连时，需要重新订阅
+            //发生断开重连时，需要重新订阅 --> Happened to disconnect and reconnect, you need to re-subscribe
             //while (true) { 
             //    if(wb.isReconnect()){
             //        wb.send("{'event':'addChannel','channel':'ok_btccny_ticker'}");
@@ -29,8 +29,9 @@ namespace websocket
             //    Thread.Sleep(1000);
 
             //}
-            Console.ReadKey();
-            wb.stop();  //优雅的关闭，程序退出时需要关闭WebSocket连接
+             Console.ReadKey();
+            Console.Title = "Puller";
+            wb.stop();  //优雅的关闭，程序退出时需要关闭WebSocket连接 --> Shutdown gracefully exit the program needs to close WebSocket connection
         }
     }
 }
