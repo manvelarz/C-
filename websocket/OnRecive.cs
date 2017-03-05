@@ -18,7 +18,7 @@ namespace websocket
     {
         public static bool isLastWastrade = false;
         public static bool after = false;
-        public static short counter = 0;
+        
 
         public static void whatToDo(string msg)
         {
@@ -41,9 +41,6 @@ namespace websocket
 
                         if (channel == "ok_sub_spotcny_btc_trades"  )
                         {
-                            Console.WriteLine(counter.ToString());
-
-                            counter += 1;
 
                             var model = item.ToObject<Trades>();
 
@@ -55,7 +52,7 @@ namespace websocket
 
                             Globals.PastTradesTyped.AddRange(typed.data);
 
-                            if (!isLastWastrade)
+                            if (!isLastWastrade)  // for summing extra trades wich come alone , without depth info
 
                             {
                                 

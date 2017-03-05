@@ -68,14 +68,14 @@ namespace websocket
 
             var result = data.GroupBy(i => 1)
                             .Select(i => new
-                                            {
-                                                askSum = i.Where(j => j.type == "ask").Sum(k => (float)k.amount), 
-                                                bidSum = i.Where(j => j.type == "bid").Sum(k => (float)k.amount)
-                                            });
+                            {
+                                askSum = i.Where(j => j.type == "ask").Sum(k => (float)k.amount),
+                                bidSum = i.Where(j => j.type == "bid").Sum(k => (float)k.amount)
+                            });
 
-           // Console.WriteLine(result.First().askSum);
+            // Console.WriteLine(result.First().askSum);
 
-            ret.Add(new Tuple<string, float> ("askSum", result.First().askSum));
+            ret.Add(new Tuple<string, float>("askSum", result.First().askSum));
 
             ret.Add(new Tuple<string, float>("bidSum", result.First().bidSum));
 
@@ -83,7 +83,7 @@ namespace websocket
 
         }
 
-        public static void StoreTrades  (List<Tuple<string, float>> msg, TradesTyped typed)
+        public static void StoreTrades(List<Tuple<string, float>> msg, TradesTyped typed)
         {
             string output = "";
             string tab = "\t";
@@ -94,12 +94,38 @@ namespace websocket
             {
 
 
-                outputFile.Write ((Convert.ToDateTime(typed.data.First().data) ) +  tab + msg[0].Item2 + tab + + msg[1].Item2);  //msg[0].Item1  + tab + msg[0].Item2 + tab + msg[1].Item1 + tab + msg[1].Item2);
-                output += tab + msg[0].Item2 + tab + +msg[1].Item2; 
+                outputFile.Write((Convert.ToDateTime(typed.data.First().data)) + tab + msg[0].Item2 + tab + +msg[1].Item2);  //
+
+                output += msg[0].Item2 + tab + msg[1].Item2 + tab; // [0]-> Asksum , [1]-> Bidsum
+                var diff = Math.Round(msg[1].Item2 - msg[0].Item2, 1);
+                WrightInColors(diff);
 
             }
 
-            Console.WriteLine(output);
+            //Console.WriteLine(output);
+            Console.Write(output);
+        }
+        /// <summary>
+        /// ++ It Wright in green positiv an in red negative numbers
+        /// </summary>
+        /// <param name="diff"></param>
+        public static void WrightInColors(double diff)
+        {
+
+            if (diff > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(diff.ToString("0.0") + "\t"); // The difference of asksum and bidsum
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(Math.Abs(diff).ToString("0.0") + "\t"); // The difference of asksum and bidsum
+                Console.ResetColor();
+            }
+
+
         }
 
     }

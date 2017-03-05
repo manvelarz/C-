@@ -10,6 +10,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace websocket
 {
@@ -26,6 +27,7 @@ namespace websocket
             this.url = url;
         }
         public void start() {
+            Int16 counter = 0;
             webSocketClient = new WebSocket(url);
             webSocketClient.OnError += new EventHandler<WebSocketSharp.ErrorEventArgs>(webSocketClient_Error);
             webSocketClient.OnOpen += new EventHandler(webSocketClient_Opened);
@@ -35,6 +37,7 @@ namespace websocket
             while (!webSocketClient.IsAlive) {
                 Console.WriteLine("Waiting WebSocket connnet......");
                 Thread.Sleep(1000);
+                counter += 1;
             }
             t.Elapsed += new System.Timers.ElapsedEventHandler(heatBeat);
             t.Start();
@@ -45,7 +48,12 @@ namespace websocket
         }
         private void webSocketClient_Error(object sender, WebSocketSharp.ErrorEventArgs e)
         {
-            
+            // webSocketClient_Closed;
+            //webSocketClient.ConnectAsync();
+            var fileName = Assembly.GetExecutingAssembly().Location;
+            System.Diagnostics.Process.Start(fileName);
+            Environment.Exit(0);
+            // Environment.Exit(0);
         }
         private void webSocketClient_MessageReceived(object sender, MessageEventArgs e)
         {
@@ -54,7 +62,7 @@ namespace websocket
             OnRecive.whatToDo(e.Data);
 
 
-            // Console.WriteLine("...Pong");
+             Console.WriteLine("...Pong");
 
 
 
