@@ -11,6 +11,7 @@ namespace websocket
     {
         public static List<TradeItem> PastTradesTyped = new List<TradeItem>(); // Modifiable in Code
         public const Int32 VALUE = 10; // Unmodifiable
+        public static string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\WriteLines.txt";  //TODO pti mi tegic karda
     }
 
 

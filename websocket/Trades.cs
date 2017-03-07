@@ -90,7 +90,7 @@ namespace websocket
 
             string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\WriteLines.txt";  //TODO pti mi tegic karda
 
-            using (StreamWriter outputFile = new StreamWriter(mydocpath, true))
+            using (StreamWriter outputFile = new StreamWriter(Globals.mydocpath, true))
             {
 
 
