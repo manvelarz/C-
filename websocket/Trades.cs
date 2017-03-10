@@ -51,16 +51,6 @@ namespace websocket
             data = new List<TradeItem>();
         }
 
-        //public  List<TradeItem> Add(List<TradeItem> value1)
-        //{
-
-        //    this.AddRange(value1);
-
-        //    return (value1);
-
-        //}
-
-
 
         public static List<Tuple<string, float>> SumAmountByType(List<TradeItem> data)
         {
@@ -88,7 +78,7 @@ namespace websocket
             string output = "";
             string tab = "\t";
 
-            string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\WriteLines.txt";  //TODO pti mi tegic karda
+            //string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\WriteLines.txt";  //TODO pti mi tegic karda
 
             using (StreamWriter outputFile = new StreamWriter(Globals.mydocpath, true))
             {
@@ -130,7 +120,7 @@ namespace websocket
 
     }
 
-        public class TradeItem
+    public class TradeItem
     {
         public TradeItem(string Unixtime, string price, string amount, string data, string type)
         {
